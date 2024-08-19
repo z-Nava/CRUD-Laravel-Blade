@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\Departamento;
 use Illuminate\Support\Facades\DB;
+use App\Events\ClienteUpdated;
 
 class ClienteController extends Controller
 {
@@ -60,6 +61,9 @@ class ClienteController extends Controller
         $cliente->telefono = $request->input('telefono');
         $cliente->departamento_id = $request->input('departamento');
         $cliente->save();
+
+        broadcast(new ClienteUpdated($cliente));
+
 
         return redirect()->route('cliente.index')
             ->with('exito', 'Cliente creado con éxito');
